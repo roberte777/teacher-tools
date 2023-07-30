@@ -1,16 +1,25 @@
 import { Solution, Restriction } from "./types"; // assuming you've defined these types elsewhere
-import { randomIntFromInterval } from ".";
+import { deepCopy, randomIntFromInterval } from ".";
 
+/**
+ * Function to move a student from the larget group to the smallest group.
+ * It will additionally move one restriction violation to a random group.
+ * This helps makes the groups even and remove violations.
+ * @param solution the current solution to modify
+ * @param num_groups number of groups to make
+ * @param restrictions students who cannot be in the same group
+ * @returns new solution
+ **/
 function moveFromLargeGroup(
   solution: Solution,
   restrictions: Restriction[],
   num_groups: number,
 ): Solution {
-  let sol = [...solution]; // Copying the solution so as to not mutate the original array
+  let sol = deepCopy(solution); // Copying the solution so as to not mutate the original array
 
   //TODO: this is run twice per step. Could abstract it out for efficiency
   let studentToGroup = new Map<number, number>();
-  for (let entry of solution) {
+  for (let entry of sol) {
     studentToGroup.set(entry.student.id, entry.group);
   }
 
@@ -19,9 +28,10 @@ function moveFromLargeGroup(
     if (studentToGroup.get(student1) === studentToGroup.get(student2)) {
       let index = randomIntFromInterval(
         0,
-        sol.filter((group) => group !== sol[student1]).length - 1,
+        sol.filter((item) => item.group !== studentToGroup.get(student1))
+          .length - 1,
       );
-      sol.find((s) => s.student.id === student1)!.group = index;
+      sol.find((s) => s.student.id === student1)!.group = sol[index].group;
     }
     // Move student1 to a different group
   }
@@ -53,12 +63,20 @@ function randomMove(
   restrictions: Restriction[],
   num_groups: number,
 ): Solution {
-  let index = randomIntFromInterval(0, solution.length - 1);
+  const sol = deepCopy(solution);
+  let index = randomIntFromInterval(0, sol.length - 1);
   let new_group = randomIntFromInterval(0, num_groups - 1);
-  solution[index].group = new_group;
-  return solution;
+  sol[index].group = new_group;
+  return sol;
 }
 
+/**
+ * Makes moves in the solution in order to progress to a better one.
+ * @param solution the current solution to modify
+ * @param num_groups number of groups to make
+ * @param restrictions students who cannot be in the same group
+ * @returns new solution
+ **/
 export function makeMove(
   solution: Solution,
   restrictions: Restriction[],

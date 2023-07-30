@@ -48,16 +48,13 @@ function simulated_annealing(
   minTemp: number,
   steps: number,
 ): { finalSolution: Student[][]; score: number } {
-  let solution: Solution = students.map((student) => {
+  const startingSolution: Solution = students.map((student) => {
     let grp = randomIntFromInterval(0, numGroups - 1);
     let test = { student, group: grp };
-    console.log(test);
     return test;
   });
-  console.log("num groups", numGroups);
-  console.log("initial sol: ", solution);
-  let startingSolution = [...solution];
-  let bestSolution = [...solution];
+  let solution = deepCopy(startingSolution);
+  let bestSolution = deepCopy(startingSolution);
   let bestScore = objective(solution, numGroups, restrictions);
 
   for (let step = 0; step < steps; step++) {
@@ -119,4 +116,9 @@ function objective(
 export function randomIntFromInterval(min: number, max: number): number {
   // min and max included
   return Math.floor(Math.random() * (max - min + 1) + min);
+}
+
+export function deepCopy<T>(arr: T[]): T[] {
+  let clonedArray = JSON.parse(JSON.stringify(arr));
+  return clonedArray;
 }

@@ -1,8 +1,5 @@
-export type Student = {
-  name: string;
-  id: number;
-};
 export let students = [
+  { id: 0, name: "Derek" },
   { id: 1, name: "Alice" },
   { id: 2, name: "Bob" },
   { id: 3, name: "Charlie" },
@@ -32,7 +29,6 @@ export let students = [
   { id: 27, name: "Amy" },
   { id: 28, name: "Brian" },
   { id: 29, name: "Catherine" },
-  { id: 30, name: "Derek" },
 ];
 function randomIntFromInterval(min: number, max: number): number {
   // min and max included
@@ -40,13 +36,13 @@ function randomIntFromInterval(min: number, max: number): number {
 }
 
 export function makeRestrictions(
-  num_students: number,
-  num_restrictions: number,
+  numStudents: number,
+  numRestrictions: number,
 ): { student1: number; student2: number }[] {
   let restrictions: { student1: number; student2: number }[] = [];
-  while (restrictions.length < num_restrictions) {
-    let student1 = randomIntFromInterval(0, num_students - 1);
-    let student2 = randomIntFromInterval(0, num_students - 1);
+  while (restrictions.length < numRestrictions) {
+    let student1 = randomIntFromInterval(0, numStudents - 1);
+    let student2 = randomIntFromInterval(0, numStudents - 1);
     if (
       student1 !== student2 &&
       !restrictions.find(
