@@ -7,7 +7,7 @@ import annealing
 
 STEPS = 1000
 MAX_TEMP = 10.0
-MAX_TEMP = 0.1
+MIN_TEMP = 0.1
 
 
 def make_restrictions(num_students, num_restrictions):
@@ -38,7 +38,7 @@ def main():
     print(f"Restrictions: {restrictions}")
 
     groups, variance = annealing.simulated_annealing(
-        students, num_groups, restrictions, MAX_TEMP, MAX_TEMP, STEPS
+        students, num_groups, restrictions, MAX_TEMP, MIN_TEMP, STEPS
     )
 
     for i, group in enumerate(groups):
